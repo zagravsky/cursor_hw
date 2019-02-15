@@ -1,4 +1,8 @@
-from flask import Flask, render_template, request, jsonify, make_response, url_for, abort, session
+from flask import Flask
+from flask import Flask, flash, redirect, render_template, request, session, abort, jsonify, make_response, url_for
+from datetime import timedelta
+import os
+
 from werkzeug.utils import secure_filename
 
 from api import api
@@ -25,10 +29,35 @@ data = {
     }
 }
 
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=1)
+
+
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template("home.html", data=data, dict_cars=dict_cars)
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return render_template("home.html", data=data, dict_cars=dict_cars)
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    if request.form['password'] == 'admin' and request.form['username'] == 'admin':
+        session['logged_in'] = True
+        session['username'] = request.form['username']
+    else:
+        flash('wrong password!')
+    return home()
+
+
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return home()
 
 
 @app.route("/about")
@@ -57,9 +86,12 @@ def show_subpath(subpath):
     return 'Subpath %s' % subpath
 
 
-@app.route("/login")
-def login():
-    return render_template("login.html")
+@app.route("/products")
+def products():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return render_template("products.html", data=data, dict_cars=dict_cars)
 
 
 @app.route("/month/<int:number>")
@@ -217,6 +249,9 @@ def test_redirect():
 def error_501_handler(error):
     return render_template("error_501.html")
 
+@app.errorhandler(404)
+def error_404_handler(error):
+    return render_template("error_404.html")
 
 app.secret_key = b'"\xaa;\x0b\x12\x8a\xa1V+\x16\xc5\x91\xfb,\xcb#'
 

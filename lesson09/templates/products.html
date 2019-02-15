@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+<a href="{{ url_for('home') }}">Home</a>
+<br>
+<br>
+{% for key, value in dict_cars.items() %}
+        <a href="{{ url_for('get_item', name = value) }}">{{ key }}</a><br>
+{% endfor %}
+
+</body>
+</html>
