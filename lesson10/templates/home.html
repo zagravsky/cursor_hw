@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="/static/style.css" type="text/css">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+Hello {{ session['username'] }} <a href="{{ url_for('logout') }}">Logout</a><br>
+<a href="{{ url_for('products') }}">Products</a><br>
+<br>
+<div style="margin: auto; align-content:center; width: 100%;">
+    <h1>News</h1>
+    {% for elem in data.get("news") %}
+            <p style="background-color: aliceblue;border-radius: 3px;padding: 20px; max-width: 320px;">{{ elem }}</p>
+    {% endfor %}
+</div>
+</body>
+</html>
