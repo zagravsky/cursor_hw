@@ -4,7 +4,7 @@ class Book:
         self.author = author
 
     def __str__(self):
-        return 'Book %s by %s' % (self.name, self.author)
+        return f'Book {self.name} by {self.author}'
 
 
 class Bookshelf:
@@ -15,7 +15,7 @@ class Bookshelf:
         self.collection.clear()
 
     def __str__(self):
-        return self.description + '%i' % len(self.collection)
+        return f'{self.description}{len(self.collection)}'
 
     def place_book(self, name, author):
         self.collection.append(Book(name, author))
