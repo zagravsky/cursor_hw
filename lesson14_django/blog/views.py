@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Article
-from django.http import HttpResponse
+from django import forms
 
 
 # Create your views here.
@@ -14,6 +14,11 @@ def index(request):
 
 
 def detail(request, article_id):
-    article = Article.objects.get(id=article_id)
+    article = get_object_or_404(Article, pk=article_id)
     return render(request, 'detail.html', {'article': article})
 
+
+class NewArticleForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = '__all__'
